@@ -2493,51 +2493,58 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Performance optimizations */
+/* Mobile Optimizations */
 @media (max-width: 768px) {
-    /* Optimize paint operations */
-    .particle,
-    .about-particle,
-    .service-particle {
-        animation-play-state: paused;
-        will-change: transform;
+    /* Optimize hero section for mobile */
+    .hero {
+        /* Enable hardware acceleration */
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
         backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        will-change: transform;
+        
+        /* Reduce animation complexity */
+        animation: none;
     }
 
-    /* Reduce repaints */
-    .navbar,
-    .service-card,
-    .testimonial-card {
-        will-change: transform;
-        backface-visibility: hidden;
+    /* Hide particles on mobile */
+    .particles {
+        display: none;
     }
 
-    /* Optimize background animations */
-    .services-bg,
-    .testimonials-bg,
-    .contact-bg {
-        will-change: transform;
-        backface-visibility: hidden;
+    /* Optimize grid background */
+    .grid-background {
+        width: 150%; /* Reduced from 250% */
+        height: 150%; /* Reduced from 250% */
+        opacity: 0.3; /* Reduced opacity */
+        animation: none; /* Remove animation */
+        background-size: 20px 20px; /* Smaller grid size */
     }
 
-    /* Optimize scrolling */
-    .testimonials-slider {
-        -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
+    /* Optimize floating shapes */
+    .floating-shapes .shape {
+        animation-duration: 20s; /* Slower animation */
+        opacity: 0.3; /* Reduced opacity */
+    }
+
+    /* Optimize grid overlay */
+    .grid-overlay {
+        opacity: 0.2;
+        animation: none;
     }
 }
 
-/* Add content-visibility to improve rendering */
-.services,
-.testimonials,
-.contact {
-    content-visibility: auto;
-    contain-intrinsic-size: 700px;
-}
-
-/* Optimize fonts */
-@font-face {
-    font-family: 'Your-Font';
-    font-display: swap;
+/* Add reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .hero,
+    .grid-background,
+    .grid-overlay,
+    .particles,
+    .floating-shapes,
+    .shape {
+        animation: none !important;
+        transition: none !important;
+    }
 }
 
