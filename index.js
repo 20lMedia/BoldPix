@@ -468,3 +468,31 @@ document.addEventListener('DOMContentLoaded', initTestimonialAnimations);
 window.addEventListener('scroll', () => {
     requestAnimationFrame(initTestimonialAnimations);
 });
+
+// Performance optimizations
+document.addEventListener('DOMContentLoaded', () => {
+    // Lazy load images
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        if (!img.complete) {
+            img.loading = 'lazy';
+            img.decoding = 'async';
+        }
+    });
+
+    // Defer non-critical animations
+    const deferAnimations = () => {
+        requestIdleCallback(() => {
+            document.querySelectorAll('.particle, .about-particle, .service-particle').forEach(el => {
+                el.style.animationPlayState = 'running';
+            });
+        });
+    };
+
+    // Initialize deferred animations
+    if ('requestIdleCallback' in window) {
+        deferAnimations();
+    } else {
+        setTimeout(deferAnimations, 1000);
+    }
+});
