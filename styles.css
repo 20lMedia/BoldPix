@@ -2493,3 +2493,51 @@ body {
     transition: all 0.3s ease;
 }
 
+/* Performance optimizations */
+@media (max-width: 768px) {
+    /* Optimize paint operations */
+    .particle,
+    .about-particle,
+    .service-particle {
+        animation-play-state: paused;
+        will-change: transform;
+        backface-visibility: hidden;
+    }
+
+    /* Reduce repaints */
+    .navbar,
+    .service-card,
+    .testimonial-card {
+        will-change: transform;
+        backface-visibility: hidden;
+    }
+
+    /* Optimize background animations */
+    .services-bg,
+    .testimonials-bg,
+    .contact-bg {
+        will-change: transform;
+        backface-visibility: hidden;
+    }
+
+    /* Optimize scrolling */
+    .testimonials-slider {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+}
+
+/* Add content-visibility to improve rendering */
+.services,
+.testimonials,
+.contact {
+    content-visibility: auto;
+    contain-intrinsic-size: 700px;
+}
+
+/* Optimize fonts */
+@font-face {
+    font-family: 'Your-Font';
+    font-display: swap;
+}
+
