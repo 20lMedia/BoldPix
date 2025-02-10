@@ -104,34 +104,59 @@ window.addEventListener('scroll', throttle(updateActiveNavLink, 100));
 
 // Enhanced Particle System
 function createParticles() {
+    if (window.innerWidth <= 768) return; // Don't create particles on mobile
+    
     const particlesContainer = document.querySelector('.particles');
-    const particleCount = 30;
+    const particleCount = window.innerWidth <= 1024 ? 15 : 30; // Reduce particles on smaller screens
+
+    // Clear existing particles
+    if (particlesContainer) {
+        particlesContainer.innerHTML = '';
+    }
 
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
         
-        // Random size between 2 and 6 pixels
-        const size = Math.random() * 4 + 2;
+        // Simplified animation for better performance
+        const size = Math.random() * 3 + 2; // Smaller particles
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
         
-        // Random position
         particle.style.left = `${Math.random() * 100}%`;
         
-        // Random animation duration between 10 and 20 seconds
-        const duration = Math.random() * 10 + 10;
+        // Longer duration for smoother animation
+        const duration = Math.random() * 5 + 15;
         particle.style.setProperty('--duration', `${duration}s`);
-        
-        // Random delay
-        particle.style.animationDelay = `${Math.random() * 10}s`;
         
         particlesContainer.appendChild(particle);
     }
 }
 
-// Call particle creation when document loads
-document.addEventListener('DOMContentLoaded', createParticles);
+// Debounced window resize handler
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        createParticles();
+    }, 250);
+});
+
+// Optimize performance with requestAnimationFrame
+function optimizeAnimations() {
+    if (window.innerWidth <= 768) {
+        const heroSection = document.querySelector('.hero');
+        if (heroSection) {
+            heroSection.style.transform = 'translateZ(0)';
+        }
+    }
+}
+
+// Call on load and resize
+document.addEventListener('DOMContentLoaded', () => {
+    createParticles();
+    optimizeAnimations();
+});
 
 // Add interactive card effect
 document.querySelectorAll('.about-card').forEach(card => {
@@ -467,32 +492,4 @@ function initTestimonialAnimations() {
 document.addEventListener('DOMContentLoaded', initTestimonialAnimations);
 window.addEventListener('scroll', () => {
     requestAnimationFrame(initTestimonialAnimations);
-});
-
-// Performance optimizations
-document.addEventListener('DOMContentLoaded', () => {
-    // Lazy load images
-    const images = document.querySelectorAll('img');
-    images.forEach(img => {
-        if (!img.complete) {
-            img.loading = 'lazy';
-            img.decoding = 'async';
-        }
-    });
-
-    // Defer non-critical animations
-    const deferAnimations = () => {
-        requestIdleCallback(() => {
-            document.querySelectorAll('.particle, .about-particle, .service-particle').forEach(el => {
-                el.style.animationPlayState = 'running';
-            });
-        });
-    };
-
-    // Initialize deferred animations
-    if ('requestIdleCallback' in window) {
-        deferAnimations();
-    } else {
-        setTimeout(deferAnimations, 1000);
-    }
 });
